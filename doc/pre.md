@@ -10,7 +10,12 @@ En este proyecto buscamos replicar una parte del paper 'Brain age predicts morta
 ### Dataset
 
 El dataset que usaremos será el AOMIC-ID1000. Nos concentraremos en las imágenes MRI de peso T1. En particular utilizaremos las imágenes fMRIprep, las cuales están preprocesadas y por lo tanto normalizadas espacialmente.
-Específicamente tomaremos para cada sujeto i las imágenes {sujeto}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz y {sujeto}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz situadas en AOMIC-ID1000/derivatives/fmriprep/sub-(i)/anat
+Específicamente tomaremos para cada sujeto las imágenes:
+
+* {sujeto}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz
+* {sujeto}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz
+
+las cuales están situadas en AOMIC-ID1000/derivatives/fmriprep/sub-(i)/anat.
 
 
 
@@ -20,7 +25,7 @@ De las imágenes mencionadas trabajaremos con las segmentaciones de materia blan
 
 ### Modelo
 
-Definiremos el modelo de acuerdo a lo indicado en el paper. En este se utiliza un Gaussian Process regression para poder predecir las edades. El mismo será entrenado con los features mencionados y los datos de los sujetos encontrados en el dataset, generando una predicción de la edad como salida. 
+Definiremos el modelo de acuerdo a lo indicado en el paper. En éste se utiliza un Gaussian Process regression para poder predecir las edades. El mismo será entrenado con los features mencionados y los datos de los sujetos encontrados en el dataset, generando una predicción de la edad como salida. 
 
 
 ### Evaluación y Testeo
