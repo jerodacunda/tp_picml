@@ -14,9 +14,18 @@ Específicamente tomaremos para cada sujeto i las imágenes sub-(i)_desc-preproc
 
 ### Features
 
-Considerando que estamos realizando una predicción de edad a partir de las imágenes de tipo T1w pero no estamos combinando otra información, entendemos que no necesitamos elegir features en particular. 
+De las imágenes mencionadas trabajaremos con las segmentaciones de materia blanca (WM) y materia gris (GM), las cuales remarcamos que ya se encuentran normalizadas espacialmente. A éstas le vamos a aplicar una parcelación y extraer el promedio (mean) y desviación estándar (std). 
 
 ### Modelo
 
-Definiremos el modelo de acuerdo a lo indicado en el paper. En este se indica que primero se segmentan las imágenes entre materia blanca y gris, y luego se normalizan espacialmente de forma no lineal. Hemos visto que las imágeanes fMRIprep ya cuentan con un preprocesamiento de normalización como el mencionado, por esto decidimos utilizar estas imágenes. Como clasificador, utilizaremos Gaussian Process regression. Para repartir entre training y test data, nos basamos en el N elegido en el paper, el cual toma aproximadamente el 75% de los datos para entrenamiento y el resto para testeo. Considerando la cantidad de sujetos de nuestro dataset, elegimos un N=696 para entrenamiento y N=232 para test data. Continuando, lo validaremos usando una 10-fold cross validation a los datos de entrenamiento y finalmente lo aplicaremos al conjunto de datos de prueba, generando una prediccion sobre la edad de estos últimos, para luego compararla con la edad real y analizar qué tan bien funcionó. 
+Definiremos el modelo de acuerdo a lo indicado en el paper. En este se utiliza un Gaussian Process regression para poder predecir las edades. El mismo será entrenado con los features mencionados y los datos de los sujetos encontrados en el dataset, generando una predicción de la edad como salida. 
+
+
+### Evaluación y Testeo
+Para definir los conjuntos de training y test data, nos basamos en el N elegido en el paper, el cual toma aproximadamente el 75% de los datos para entrenamiento y el resto para testeo. Considerando que hay 928 sujetos en nuestro dataset, elegimos un N=696 para entrenamiento y N=232 para test data.
+
+Luego lo validaremos utilizando una 10-fold cross validation aplicada a los datos de entrenamiento. En esta validación se va a comparar la edad predicha y la edad verdadera. 
+
+Finalmente pondremos a prueba el modelo  utilizando al conjunto de datos de prueba. Así generamos una prediccion sobre la edad de estos últimos, para luego compararla con la edad real y analizar qué tan bien funcionó. 
+
 En la figura 1 del paper pueden verse en más detalle los pasos del modelo.
