@@ -21,11 +21,22 @@ las cuales están situadas en AOMIC-ID1000/derivatives/fmriprep/sub-(i)/anat.
 
 ### Features
 
-De las imágenes mencionadas trabajaremos con las segmentaciones de materia blanca (WM) y materia gris (GM), las cuales remarcamos que ya se encuentran normalizadas espacialmente. A éstas le vamos a aplicar una parcelación y extraer el promedio (mean) y desviación estándar (std). 
+De las imágenes mencionadas trabajaremos con las segmentaciones de materia blanca (WM) y materia gris (GM), las cuales remarcamos que ya se encuentran normalizadas espacialmente. A éstas le vamos a aplicar una serie de parcelaciones, a las cuales vamos a extraer el promedio (mean) y desviación estándar (std). Luego de explorar diferentes parcelaciones, seleccionamos las siguientes:
+- **Schaefer**: Esta es una opción sólida porque está basada en redes funcionales y ha sido validada en numerosos estudios. Captura la organización funcional del cerebro en diferentes resoluciones. Utilizaremos Schaefer100x7 y Schaefer200x7.
+- **Brainnetome**: Es un atlas anatómico *cross-validated* basado en conectividad, con información de las conexiones anatómicas y funcionales. Utilizaremos Brainnetome246.
+
 
 ### Modelo
 
-Definiremos el modelo de acuerdo a lo indicado en el paper. En éste se utiliza un Gaussian Process regression para poder predecir las edades. El mismo será entrenado con los features mencionados y los datos de los sujetos encontrados en el dataset, generando una predicción de la edad como salida. 
+Definiremos el modelo de acuerdo a lo indicado en el paper. En éste se utiliza un Gaussian Process regression para poder predecir las edades. El mismo será entrenado con los features mencionados y los datos de los sujetos encontrados en el dataset, generando una predicción de la edad como salida. Para el entrenamiento, el GPR toma como parámetro un kernel que define su función de covarianza. Este kernel toma a su vez uno o más hiperparámetros que se van optimizando durante el entrenamiento. El kernel puede definirse como combinación de distintos kernels. En nuestro caso, lo definiremos combinando:
+- **Constant kernel**: se usa como factor de un kernel *producto* y escala la magnitud del otro factor. El hiperparámetro a optimizar es una constante iniciada en 1 y define la covarianza.
+- **RBF**: los Gaussian Process con este kernel como función de covarianza permiten derivar los cuadrados medios absolutos de todos los órdenes. Su hiperparámetro a optimizar es la *lenght_scale*, que permite definir cómo escalan las dimensiones de los datos y también está inicializado en 1.
+  
+Entonces nuestro kernel queda definido así (los parámetros "fixed" no se optimizan durante el entrenamiento): 
+- *ConstantKernel(1.0, constant_value_bounds="fixed") * RBF(1.0, length_scale_bounds="fixed")*
+
+Para explorar sobre los valores y hallar los óptimos, vamos a utilizar grid search, es decir, plantear todas las combinaciones posibles.
+  
 
 
 ### Evaluación y Testeo
