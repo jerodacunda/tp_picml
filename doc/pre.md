@@ -32,10 +32,10 @@ Definiremos el modelo de acuerdo a lo indicado en el paper. En éste se utiliza 
 - **Constant kernel**: se usa como factor de un kernel *producto* y escala la magnitud del otro factor. El hiperparámetro a optimizar es una constante iniciada en 1 y define la covarianza.
 - **RBF**: los Gaussian Process con este kernel como función de covarianza permiten derivar los cuadrados medios absolutos de todos los órdenes. Su hiperparámetro a optimizar es la *lenght_scale*, que permite definir cómo escalan las dimensiones de los datos y también está inicializado en 1.
   
-Entonces nuestro kernel queda definido así (los parámetros "fixed" no se optimizan durante el entrenamiento): 
+Entonces nuestro kernel queda definido así (los "bounds" van en "fixed" para que no se optimicen los hiperparámetros durante el entrenamiento): 
 - *ConstantKernel(1.0, constant_value_bounds="fixed") * RBF(1.0, length_scale_bounds="fixed")*
 
-Para explorar sobre los valores y hallar los óptimos, vamos a utilizar grid search, es decir, plantear todas las combinaciones posibles.
+Para explorar sobre los valores y hallar los óptimos, vamos a utilizar grid search. Es decir que planteamos un conjunto de valores para cada hiperparámetro y luego se prueban todas las combinaciones posibles.
   
 
 
