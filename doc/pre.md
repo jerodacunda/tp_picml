@@ -40,10 +40,15 @@ Para explorar sobre los valores y hallar los óptimos, vamos a utilizar grid sea
 
 
 ### Evaluación y Testeo
-Para definir los conjuntos de training y test data, nos basamos en el N elegido en el paper, el cual toma aproximadamente el 75% de los datos para entrenamiento y el resto para testeo. Considerando que hay 928 sujetos en nuestro dataset, elegimos un N=696 para entrenamiento y N=232 para test data.
+Para definir los conjuntos de training y test data, nos basamos en el N elegido en el paper, el cual toma aproximadamente el 75% de los datos para entrenamiento y el resto para testeo. Considerando que hay 928 sujetos en nuestro dataset, elegimos un N=696 para entrenamiento y N=232 para test data. Luego lo validaremos utilizando una 10-fold cross validation aplicada a los datos de entrenamiento. Explicamos la importancia y el desarrollo de este proceso más en detalle:
 
-Luego lo validaremos utilizando una 10-fold cross validation aplicada a los datos de entrenamiento. En esta validación se va a comparar la edad predicha y la edad verdadera. 
+Al realizar experimentos y explorar hiperparámetros, es crucial tomar ciertas precauciones. Por ejemplo, si se utiliza un conjunto de datos de entrenamiento y otro de prueba para evaluar la mejor configuración de los hiperparámetros en el conjunto de prueba, los resultados podrían ser sesgados y demasiado optimistas. En otras palabras, no podríamos garantizar que la configuración óptima de hiperparámetros funcionará igual de bien en nuevos conjuntos de datos no vistos.
 
-Finalmente pondremos a prueba el modelo  utilizando al conjunto de datos de prueba. Así generamos una prediccion sobre la edad de estos últimos, para luego compararla con la edad real y analizar qué tan bien funcionó. 
+Para mitigar este problema, utilizamos el método de validación cruzada, que permite medir el rendimiento de manera más generalizable. En este trabajo, aplicaremos la técnica de $k$-fold cross-validation. La idea es crear un conjunto de datos de desarrollo a partir de los datos de entrenamiento, dividiendo el conjunto de entrenamiento en $k$ partes. En nuestro caso, lo diviriremos en $k = 10$ partes; en cada iteración, utilizamos 9 partes para entrenar el modelo y la parte restante para validarlo. Este proceso se repite cíclicamente $k$ veces, de manera que cada parte del conjunto de entrenamiento se utiliza como conjunto de validación una vez. Finalmente, promediamos los resultados de las 10 iteraciones. De esta manera, todos los datos son utilizados tanto para entrenamiento como para validación en algún momento, proporcionando una evaluación más robusta del rendimiento del modelo.
 
-En la figura 1 del paper pueden verse en más detalle los pasos del modelo.
+Finalmente pondremos a prueba el modelo utilizando al conjunto de datos de prueba que separamos inicialmente. Así generamos una prediccion sobre la edad de estos últimos, para luego compararla con la edad real y analizar qué tan bien funcionó. Para realizar dicho análisis consideraremos las siguientes métricas:
+- MAE (mean absolute error)
+- RMSE (root min square)
+- $R^2$
+
+MAE y RMSE son las métricas utilizadas en el paper, y extenderemos la medición considerando también $R^2$.
